@@ -42,43 +42,95 @@ int insert(queue **front, queue **rear, char nama[80], char alamat[80], char ema
 
 int delete (queue **front, queue **rear, char nama[80], char alamat[80], char email[80], int NIM)
 {
-    queue *temp;
-    int selected_id;
-    if (*front != NULL)
+    // jika queue kosong
+    if (*front == NULL)
     {
-        printf("hapus berdasarkan id: ");
-        scanf("%d", &selected_id);
-
-        while (*front != NULL)
-        {
-            if ((*front)->id == selected_id)
-            {
-                temp = *front;           // ambil element paling atas
-                *front = (*front)->next; //! line yang menjadi problem
-                strcpy(nama, temp->nama);
-                strcpy(alamat, temp->alamat);
-                strcpy(email, temp->email);
-
-                printf("%s has deleted\n", nama);
-                printf("%d has deleted\n", NIM);
-                printf("%s has deleted\n", alamat);
-                printf("%s has deleted\n", email);
-                free(temp);
-                return 1;
-            }
-            else
-            {
-                *front = (*front)->next;
-            }
-        }
-    }
-    else
-    {
-        printf("Queue is Empty\n");
+        printf("Queue is empty\n");
         return 0;
     }
+    
+    int selected_id;
+    printf("hapus berdasarkan id: ");
+    scanf("%d", &selected_id);
+
+    // cursor bakal maju terus sampai id yang diinputkan sama dengan id yang ada di queue
+    // precursor adalah pointer sebelum cursor, dan cursor adalah pointer yang sedang ditunjukkan
+    queue *cursor, *precursor;
+    for (cursor = *front ; cursor != NULL ; cursor = cursor->next)
+    {
+        // jika id yang diinputkan sama dengan id yang ada di queue
+        // berhenti
+        if (cursor->id == selected_id)
+        {
+            break;
+        }
+
+        // jika beda, maka precursor bakal menunjuk ke simpul sekarang
+        precursor = cursor;
+    }
+
+    if (cursor == *rear)
+    {
+        // ubah *rear jadi sebelum terakhir
+        *rear = precursor;
+        precursor->next = NULL;
+    } else if (cursor == *front)
+    {
+        // ubah front jadi data selanjutnya
+        *front = cursor->next;   
+    } else
+    {
+        // sambung data sebelum dan sesudahnya
+        // precursor -> cursor -> cursor.next
+        // a         -> b      -> c
+        // jika b di delete harus sambung a dan c
+        precursor->next = cursor->next;
+    }
+    
+    free(cursor);
+    cursor = NULL;
     return 1;
 }
+
+// int delete (queue **front, queue **rear, char nama[80], char alamat[80], char email[80], int NIM)
+// {
+//     queue *temp;
+//     int selected_id;
+//     if (*front != NULL)
+//     {
+//         printf("hapus berdasarkan id: ");
+//         scanf("%d", &selected_id);
+
+//         while (*front != NULL)
+//         {
+//             if ((*front)->id == selected_id)
+//             {
+//                 temp = *front;           // ambil element paling atas
+//                 *front = (*front)->next; //! line yang menjadi problem
+//                 strcpy(nama, temp->nama);
+//                 strcpy(alamat, temp->alamat);
+//                 strcpy(email, temp->email);
+
+//                 printf("%s has deleted\n", nama);
+//                 printf("%d has deleted\n", NIM);
+//                 printf("%s has deleted\n", alamat);
+//                 printf("%s has deleted\n", email);
+//                 free(temp);
+//                 return 1;
+//             }
+//             else
+//             {
+//                 *front = (*front)->next;
+//             }
+//         }
+//     }
+//     else
+//     {
+//         printf("Queue is Empty\n");
+//         return 0;
+//     }
+//     return 1;
+// }
 
 int display(queue *front)
 {
@@ -150,6 +202,15 @@ int main()
     char nama[80], alamat[80], email[80];
     int NIM, id;
     int choice;
+
+    // // data dummy
+    // for (int i = 0 ; i < 5 ; i++) {
+    //     char a[80], b[80], c[80];
+    //     sprintf(a, "nama%d", i);
+    //     sprintf(b, "alamat%d", i);
+    //     sprintf(c, "email%d", i);
+    //     insert(&front, &rear, a, b, c, i);
+    // }
     do
     {
         printf("\n1. Insert\n");
