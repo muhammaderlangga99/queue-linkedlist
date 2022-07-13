@@ -2,11 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-/*! fitur delete bisa memilih simpul yang akan dihapus berdasarkan id.
- Jadi jika saya memiliki 2 data dan saya ingin menghapus data ke-2, maka simpul akan mengarah ke
- simpul berikutnya (simpul->next), yang artinya simpul berikutnya ini berisi NULL karna saya tidak memiliki simpul lain / simpul ke-3. Jadi di sini problemnya, ketika saya ingin menampilkan semua data, saya tidak bisa menampilkan data ke-1 karena simpul langsung mengarah ke simpul->next, data tersebut tidak ada. dan hasilnya "Queue is empty".
-*/
-
 typedef struct queue
 {
     char nama[80];
@@ -48,15 +43,23 @@ int delete (queue **front, queue **rear, char nama[80], char alamat[80], char em
         printf("Queue is empty\n");
         return 0;
     }
-    
-    int selected_id;
+    else if (*front != NULL && (*front)->next == NULL)
+    {
+        free(*front);
+        *front = NULL;
+        *rear = NULL;
+        printf("Data berhasil dihapus, data kosong.\n");
+        return 0;
+    }
+
+    int selected_id, i;
     printf("hapus berdasarkan id: ");
     scanf("%d", &selected_id);
 
     // cursor bakal maju terus sampai id yang diinputkan sama dengan id yang ada di queue
     // precursor adalah pointer sebelum cursor, dan cursor adalah pointer yang sedang ditunjukkan
     queue *cursor, *precursor;
-    for (cursor = *front ; cursor != NULL ; cursor = cursor->next)
+    for (cursor = *front; cursor != NULL; cursor = cursor->next)
     {
         // jika id yang diinputkan sama dengan id yang ada di queue
         // berhenti
@@ -74,11 +77,13 @@ int delete (queue **front, queue **rear, char nama[80], char alamat[80], char em
         // ubah *rear jadi sebelum terakhir
         *rear = precursor;
         precursor->next = NULL;
-    } else if (cursor == *front)
+    }
+    else if (cursor == *front)
     {
         // ubah front jadi data selanjutnya
-        *front = cursor->next;   
-    } else
+        *front = cursor->next;
+    }
+    else
     {
         // sambung data sebelum dan sesudahnya
         // precursor -> cursor -> cursor.next
@@ -86,51 +91,12 @@ int delete (queue **front, queue **rear, char nama[80], char alamat[80], char em
         // jika b di delete harus sambung a dan c
         precursor->next = cursor->next;
     }
-    
+
+    printf("Data dari id %d berhasil dihapus\n", cursor->id);
     free(cursor);
     cursor = NULL;
     return 1;
 }
-
-// int delete (queue **front, queue **rear, char nama[80], char alamat[80], char email[80], int NIM)
-// {
-//     queue *temp;
-//     int selected_id;
-//     if (*front != NULL)
-//     {
-//         printf("hapus berdasarkan id: ");
-//         scanf("%d", &selected_id);
-
-//         while (*front != NULL)
-//         {
-//             if ((*front)->id == selected_id)
-//             {
-//                 temp = *front;           // ambil element paling atas
-//                 *front = (*front)->next; //! line yang menjadi problem
-//                 strcpy(nama, temp->nama);
-//                 strcpy(alamat, temp->alamat);
-//                 strcpy(email, temp->email);
-
-//                 printf("%s has deleted\n", nama);
-//                 printf("%d has deleted\n", NIM);
-//                 printf("%s has deleted\n", alamat);
-//                 printf("%s has deleted\n", email);
-//                 free(temp);
-//                 return 1;
-//             }
-//             else
-//             {
-//                 *front = (*front)->next;
-//             }
-//         }
-//     }
-//     else
-//     {
-//         printf("Queue is Empty\n");
-//         return 0;
-//     }
-//     return 1;
-// }
 
 int display(queue *front)
 {
@@ -140,7 +106,7 @@ int display(queue *front)
     temp = front;
     if (temp == NULL)
     {
-        printf("Queue is Empty\n");
+        printf("Queue Kosong\n");
     }
     else
     {
@@ -158,42 +124,42 @@ int display(queue *front)
     return 0;
 }
 
-// int modify(queue **front, queue **rear, char nama[80], char alamat[80], char email[80], int NIM)
-// {
-//     queue *temp;
-//     int select;
-//     temp = *front;
-//     if (temp == NULL)
-//     {
-//         printf("Queue is Empty\n");
-//     }
-//     else
-//     {
-//         printf("Select the data you want to modify by id: ");
-//         scanf("%d", &select);
-//         while (temp != NULL)
-//         {
-//             if (temp->id == select)
-//             {
-//                 printf("enter %s: ", temp->nama);
-//                 scanf("%s", temp->nama);
-//                 printf("enter %s: ", temp->alamat);
-//                 scanf("%s", temp->alamat);
-//                 printf("enter %s: ", temp->email);
-//                 scanf("%s", temp->email);
-//                 printf("enter %d: ", temp->NIM);
-//                 scanf("%d", &temp->NIM);
-//                 printf("%s has modified\n", temp->nama);
-//                 printf("%s has modified\n", temp->alamat);
-//                 printf("%s has modified\n", temp->email);
-//                 printf("%d has modified\n", temp->NIM);
-//                 return 1;
-//             }
-//             temp = temp->next;
-//         }
-//     }
-//     return 0;
-// }
+int modify(queue **front, queue **rear, char nama[80], char alamat[80], char email[80], int NIM)
+{
+    queue *temp;
+    int select;
+    temp = *front;
+    if (temp == NULL)
+    {
+        printf("Queue Kosong\n");
+    }
+    else
+    {
+        printf("Select the data you want to modify by id: ");
+        scanf("%d", &select);
+        while (temp != NULL)
+        {
+            if (temp->id == select)
+            {
+                printf("masukkan nama: ", temp->nama);
+                scanf("%s", temp->nama);
+                printf("masukkan NIM: ");
+                scanf("%d", &temp->NIM);
+                printf("masukkan alamat: ");
+                scanf("%s", temp->alamat);
+                printf("masukkan email: ");
+                scanf("%s", temp->email);
+                printf("\nNama berhasil diubah menjadi %s\n", temp->nama);
+                printf("NIM berhasil diubah menjadi %d\n", temp->NIM);
+                printf("Alamat berhasil diubah menjadi %s\n", temp->alamat);
+                printf("Email berhasil diubah menjadi %s\n", temp->email);
+                return 1;
+            }
+            temp = temp->next;
+        }
+    }
+    return 0;
+}
 
 int main()
 {
@@ -203,7 +169,7 @@ int main()
     int NIM, id;
     int choice;
 
-    // // data dummy
+    //  data dummy
     // for (int i = 0 ; i < 5 ; i++) {
     //     char a[80], b[80], c[80];
     //     sprintf(a, "nama%d", i);
@@ -216,7 +182,7 @@ int main()
         printf("\n1. Insert\n");
         printf("2. Delete\n");
         printf("3. Display\n");
-        // printf("4. Modify data by id\n");
+        printf("4. Modify data by id\n");
         printf("5. EXIT\n");
         printf("Enter your choice: ");
         scanf("%d", &choice);
@@ -240,9 +206,9 @@ int main()
         case 3:
             display(front);
             break;
-        // case 4:
-        //     modify(&front, &rear, nama, alamat, email, NIM);
-        //     break;
+        case 4:
+            modify(&front, &rear, nama, alamat, email, NIM);
+            break;
         case 5:
             break;
         default:
@@ -252,4 +218,4 @@ int main()
     return 0;
 }
 
-// ori program muhammad erlangga 21107004
+// muhammad erlangga 21107004
