@@ -1,5 +1,16 @@
 # queue-linkedlist
-Data Mahasiswa <br>
-Problem: fitur delete bisa memilih simpul yang akan dihapus berdasarkan id. <br>
-Jika saya memiliki 2 data dan saya ingin menghapus data ke-dua / data terakhir, maka simpul langsung mengarah ke
-simpul berikutnya (simpul->next), yang artinya simpul tersebut berisi NULL atau kosong karna saya tidak memiliki simpul lain, simpul ke-3.<br>di sini problemnya, ketika saya ingin menampilkan semua data (display()), saya tidak bisa menampilkan data pertama tadi (karena simpul langsung mengarah ke simpul->next, data tersebut tidak ada), hasilnya "Queue is empty".
+## _Program Data Mahasiswa_
+
+Repo ini adalah program data mahasiswa yang dibuat menggunakan Queue - Linked list bahasa C.
+saya buat program ini dengan struktur yang rapi dan mudah dimengerti oleh pemula, diselipkan
+beberapa komentar untuk line yang mungkin sulit dimengerti. 
+
+### features
+- tambah data
+- penomoran ID otomatis pada setiap data yang ditambahkan
+- hapus data berdasarkan ID
+- Tampilkan semua data
+- Edit data berdasarkan ID
+- keluar
+
+### Jangan Lupa Diklik Starnya 👋
